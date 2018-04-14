@@ -8,16 +8,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import br.usjt.arqsw.entity.Chamado;
 import br.usjt.arqsw.entity.Fila;
-import br.usjt.arqsw.dao.ConnectionFactory;
 
 /**
  * 
  * @author Lucas Copque - 816112862
  *
  */
+@Repository
 public class ChamadoDAO {
+
+	private Connection conn;
+
+	@Autowired
+	public ChamadoDAO(DataSource dataSource) throws IOException {
+
+		try {
+			this.conn = dataSource.getConnection();
+		} catch (SQLException e) {
+			throw new IOException(e);
+
+		}
+
+	}
 
 	/**
 	 * Método de criar chamado no BD
@@ -28,7 +47,6 @@ public class ChamadoDAO {
 	 */
 	public Chamado criar(Chamado chamado) throws IOException {
 		String query = "INSERT INTO chamado(descricao, status, dt_abertura, id_fila) VALUES (?, ?, ?, ?)";
-		Connection conn = ConnectionFactory.obterConexao();
 		// usando o try with resources do Java 7, que fecha o que abriu
 		try (PreparedStatement stm = conn.prepareStatement(query);) {
 			chamado.setAbertura(new java.util.Date());
@@ -66,7 +84,6 @@ public class ChamadoDAO {
 		Fila fila = new Fila();
 		chamado.setId(id);
 		String query = "SELECT * FROM chamado inner join fila on fila.id_fila = chamado.id_fila WHERE chamado.id_chamado = ?;";
-		Connection conn = ConnectionFactory.obterConexao();
 		// usando o try with resources do Java 7, que fecha o que abriu
 		try (PreparedStatement stm = conn.prepareStatement(query);) {
 			stm.setInt(1, chamado.getId());
@@ -104,7 +121,6 @@ public class ChamadoDAO {
 	 */
 	public void fecharChamado(Chamado chamado) throws IOException {
 		String query = "UPDATE chamado SET status = ?, dt_fechamento = ? WHERE chamado.id_chamado = ?";
-		Connection conn = ConnectionFactory.obterConexao();
 		// usando o try with resources do Java 7, que fecha o que abriu
 		try (PreparedStatement stm = conn.prepareStatement(query);) {
 			chamado.setFechamento(new java.util.Date());
@@ -130,7 +146,6 @@ public class ChamadoDAO {
 		String query = "select c.id_chamado, c.descricao, c.status, c.dt_abertura, c.dt_fechamento, f.nm_fila "
 				+ "from chamado c, fila f where c.id_fila = f.id_fila and c.id_fila=?";
 
-		Connection conn = ConnectionFactory.obterConexao();
 		try (PreparedStatement pst = conn.prepareStatement(query);) {
 			pst.setInt(1, fila.getId());
 

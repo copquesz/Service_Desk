@@ -12,6 +12,15 @@
 	<context:component-scan base-package="br.usjt.arqsw" />
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
+	<mvc:interceptors>
+		<bean class="br.usjt.arqsw.interceptor.AutorizadorInterceptor"/>
+	</mvc:interceptors> 
+	<bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://localhost/servicedesk"></property>
+		<property name="username" value="yabaconsultoria"></property>
+		<property name="password" value="yaba2389"></property>
+	</bean>
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />

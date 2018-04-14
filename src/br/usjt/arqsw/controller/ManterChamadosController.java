@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,11 +26,6 @@ public class ManterChamadosController {
 	private FilaService filaService;
 	private ChamadoService chamadoService;
 
-	public ManterChamadosController() {
-		filaService = new FilaService();
-		chamadoService = new ChamadoService();
-	}
-
 	private List<Fila> listarFilas() throws IOException {
 		return filaService.listar();
 	}
@@ -38,14 +34,10 @@ public class ManterChamadosController {
 		return chamadoService.listar(fila);
 	}
 
-	/**
-	 * Faz a chamada da jsp inicial
-	 * 
-	 * @return index.jsp
-	 */
-	@RequestMapping("index")
-	public String inicio() {
-		return "index";
+	@Autowired
+	public ManterChamadosController(FilaService filaService, ChamadoService chamadoService) {
+		this.filaService = filaService;
+		this.chamadoService = chamadoService;
 	}
 
 	/**
@@ -55,8 +47,14 @@ public class ManterChamadosController {
 	 * @return ChamadoCriar.jsp
 	 */
 	@RequestMapping("/criar_chamado")
-	public String addChamado(@Valid Chamado chamado, Model model) {
+	public String addChamado(@Valid Chamado chamado, BindingResult result, Model model) {
 		try {
+			if (result.hasFieldErrors()) {
+				model.addAttribute("mensagem", "falhou");
+				model.addAttribute("filas", listarFilas());
+				System.out.println("Deu erro " + result.toString());
+				return "ChamadoCriar";
+			}
 			chamado = chamadoService.criar(chamado);
 			model.addAttribute("mensagem", "sucesso");
 			model.addAttribute("chamado", chamado);
@@ -78,7 +76,7 @@ public class ManterChamadosController {
 	 * @return ChamadoListarExibir.jsp
 	 */
 	@RequestMapping("/fechar_chamado")
-	public String fecharChamado(@Valid Chamado chamado, Fila fila, Model model) {
+	public String fecharChamado(Chamado chamado, Fila fila, Model model) {
 		try {
 			chamado = chamadoService.carregar(chamado.getId());
 			fila = filaService.carregar(chamado.getFila().getId());

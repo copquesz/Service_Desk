@@ -32,6 +32,12 @@
                 <p><b>Status: </b>${chamado.status}</p>
             </div>
         </c:if>
+        <c:if test="${mensagem == 'falhou'}">
+            <div class="alert alert-danger" role="alert">
+                <p>Ocorreu um erro ao cadastrar o projeto!</p>
+                <p>Tente novamente.</p>
+            </div>
+        </c:if>
         <form action="criar_chamado" method="post">
             <div class="row justify-content-md-center">
                 <div class="form-group col-md-8">

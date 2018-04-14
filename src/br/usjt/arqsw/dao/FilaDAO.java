@@ -7,15 +7,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import br.usjt.arqsw.entity.Fila;
-import br.usjt.arqsw.dao.ConnectionFactory;
 
 /**
  * 
  * @author Lucas Copque - 816112862
  *
  */
+@Repository
 public class FilaDAO {
+
+	private Connection conn;
+
+	@Autowired
+	public FilaDAO(DataSource dataSource) throws IOException {
+
+		try {
+			this.conn = dataSource.getConnection();
+		} catch (SQLException e) {
+			throw new IOException(e);
+
+		}
+
+	}
 
 	/**
 	 * Método de pesquisa uma fila no BD
@@ -28,7 +47,6 @@ public class FilaDAO {
 		Fila fila = new Fila();
 		fila.setId(id);
 		String query = "SELECT * FROM fila WHERE fila.id_fila = ?";
-		Connection conn = ConnectionFactory.obterConexao();
 		// usando o try with resources do Java 7, que fecha o que abriu
 		try (PreparedStatement stm = conn.prepareStatement(query);) {
 			stm.setInt(1, fila.getId());
@@ -58,9 +76,7 @@ public class FilaDAO {
 		String query = "SELECT ID_FILA, NM_FILA from FILA";
 		ArrayList<Fila> lista = new ArrayList<>();
 
-		try (Connection conn = ConnectionFactory.obterConexao();
-				PreparedStatement pst = conn.prepareStatement(query);
-				ResultSet rs = pst.executeQuery();) {
+		try (PreparedStatement pst = conn.prepareStatement(query); ResultSet rs = pst.executeQuery();) {
 			while (rs.next()) {
 				Fila fila = new Fila();
 				fila.setId(rs.getInt("ID_FILA"));
