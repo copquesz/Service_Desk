@@ -41,6 +41,7 @@ public class ManterUsuarioController {
 
 	/**
 	 * Direciona o usuario para a tela de login
+	 * 
 	 * @return Login.jsp
 	 */
 	@RequestMapping("login")
@@ -50,6 +51,7 @@ public class ManterUsuarioController {
 
 	/**
 	 * Método que valida os dados de login do usuário
+	 * 
 	 * @param usuario
 	 * @param result
 	 * @param model

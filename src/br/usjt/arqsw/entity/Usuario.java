@@ -1,7 +1,13 @@
 package br.usjt.arqsw.entity;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * 
@@ -9,13 +15,24 @@ import javax.validation.constraints.NotNull;
  *
  */
 @Entity
-public class Usuario {
+@Table(name = "usuario")
+public class Usuario implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	@Column(name = "id_usuario")
 	private int id;
 
+	@Column(name = "email_usuario")
 	@NotNull(message = "Informe um e-mail")
 	private String email;
 
+	@Column(name = "senha_usuario")
+	@Size(min = 6, max = 20, message = "O TAMANHO da senha deve estar entre 6 e 20")
 	@NotNull(message = "Informe uma senha")
 	private String senha;
 

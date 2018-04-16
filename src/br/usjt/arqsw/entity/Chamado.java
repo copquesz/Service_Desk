@@ -1,35 +1,52 @@
 package br.usjt.arqsw.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
- * 
  * @author Lucas Copque - 816112862
- *
  */
+
 @Entity
-public class Chamado {
-
-	private int id;
-
-	@NotNull(message = "A descrição não pode ser nula")
-	@NotEmpty(message = "A descrição não pode ser vazia")
-	private String descricao;
-
-	private String status;
-	private Date abertura;
-	private Date fechamento;
-
-	@NotNull(message = "Informe uma fila")
-	private Fila fila;
+@Table(name = "chamado")
+public class Chamado implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	public static final String ABERTO = "Aberto";
 	public static final String FECHADO = "Fechado";
+
+	@Id
+	@Column(name = "id_chamado")
+	private int id;
+
+	@NotNull
+	@Size(min = 1, max = 100, message = "O chamado precisa ter uma descrição.")
+	@Column(name = "descricao")
+	private String descricao;
+
+	@Column(name = "status")
+	private String status;
+
+	@Column(name = "dt_abertura")
+	private Date abertura;
+
+	@Column(name = "dt_fechamento")
+	private Date fechamento;
+
+	@Valid
+	@JoinColumn(name = "id_fila")
+	@ManyToOne
+	private Fila fila;
 
 	public int getId() {
 		return id;
@@ -79,4 +96,9 @@ public class Chamado {
 		this.fila = fila;
 	}
 
+	@Override
+	public String toString() {
+		return "Chamado [id=" + id + ", descricao=" + descricao + ", status=" + status + ", abertura=" + abertura
+				+ ", fechamento=" + fechamento + ", fila=" + fila + "]";
+	}
 }

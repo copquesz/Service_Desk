@@ -2,13 +2,14 @@ package br.usjt.arqsw.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.usjt.arqsw.dao.ChamadoDAO;
 import br.usjt.arqsw.entity.Chamado;
 import br.usjt.arqsw.entity.Fila;
-import br.usjt.arqsw.dao.ChamadoDAO;
 
 /**
  * 
@@ -25,6 +26,9 @@ public class ChamadoService {
 	}
 
 	public Chamado criar(Chamado chamado) throws IOException {
+		chamado.setStatus(Chamado.ABERTO);
+		chamado.setAbertura(new Date());
+		chamado.setFechamento(null);
 		return dao.criar(chamado);
 
 	}
@@ -34,6 +38,8 @@ public class ChamadoService {
 	}
 
 	public void fecharChamado(Chamado chamado) throws IOException {
+		chamado.setFechamento(new Date());
+		chamado.setStatus(Chamado.FECHADO);
 		dao.fecharChamado(chamado);
 	}
 
