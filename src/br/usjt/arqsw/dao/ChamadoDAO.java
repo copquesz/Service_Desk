@@ -18,7 +18,6 @@ import br.usjt.arqsw.entity.Fila;
  * @author Lucas Copque - 816112862
  *
  */
-@Transactional
 @Repository
 public class ChamadoDAO {
 

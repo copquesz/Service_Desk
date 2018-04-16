@@ -17,7 +17,6 @@ import br.usjt.arqsw.entity.Usuario;
  * @author Lucas Copque - 816112862
  *
  */
-@Transactional
 @Repository
 public class UsuarioDAO {
 

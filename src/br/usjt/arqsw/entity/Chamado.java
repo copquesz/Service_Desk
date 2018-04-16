@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * @author Lucas Copque - 816112862
  */
@@ -37,9 +39,11 @@ public class Chamado implements Serializable {
 	@Column(name = "status")
 	private String status;
 
+	@JsonFormat(pattern="dd-MM-yyyy")
 	@Column(name = "dt_abertura")
 	private Date abertura;
 
+	@JsonFormat(pattern="dd-MM-yyyy")
 	@Column(name = "dt_fechamento")
 	private Date fechamento;
 
